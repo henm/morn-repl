@@ -6,11 +6,11 @@
   [& args]
   (println args))
 
-(defn splitHeadAndBody
-  "Split the head and body of a rule"
+(defn split-rule
+  "Split the head- and body-clauses of a rule"
   [rule]
   (let
-    [matcher (re-matcher #"(.*?)(?::-(?:(.+?),)*(.+?))?\." rule)]
+    [matcher (re-matcher #"(.*?)(?:\s*:-(?:\s*(.+?)\s*,)*\s*(.+?))?\." rule)]
     (re-find matcher)
-    (rest (re-groups matcher))
+    (filter some? (rest (re-groups matcher)))
   ))
