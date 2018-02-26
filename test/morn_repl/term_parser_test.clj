@@ -56,3 +56,24 @@
         (is (= (nested :functor) "g"))
         (is (= (first (nested :args)) { :type :atom, :name "Y"}))
         (is (= (second (nested :args)) { :type :atom, :name "Z"}))))))
+
+(deftest parse-rule-test
+  (testing "parse-rule should parse facts"
+    (let [r (parse-rule "a.")]
+      (is (= (r :head) { :type :atom, :name "a"}))
+      (is (= (r :body) ()))))
+  (testing "parse-rule should parse rules with body"
+    (let [r (parse-rule "a(X) :- g(X), g(p(Z), X).")
+          head (r :head)
+          body (r :body)]
+      (is (= head { :type :compound, :functor "a", :args '({ :type :atom, :name "X"})}))
+      (is (= (first body) { :type :compound, :functor "g", :args '({ :type :atom, :name "X"})}))
+      (let [second-term (second body)
+            nested-terms (second-term :args)]
+        (is (= (second-term :type) :compound))
+        (is (= (second-term :functor) "g"))
+        (is (= ((first nested-terms) :type) :compound))
+        (is (= ((first nested-terms) :functor) "p"))
+        (is (= ((first nested-terms) :args) '({ :type :atom, :name "Z"})))
+        (is (= ((second nested-terms) :type) :atom)
+        (is (= ((second nested-terms) :name) "X")))))))

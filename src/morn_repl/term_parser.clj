@@ -33,11 +33,13 @@
 (defn split-comma-separated-terms
   "Split a string of comma-separated terms"
   [terms]
-  (letfn [(split-comma-separated-terms-helper [[x & xs]] 
-            (cond (nil? x) '()
-            (balanced? x) (cons x (split-comma-separated-terms-helper xs))
-            :else (split-comma-separated-terms-helper (cons (str x "," (first xs)) (rest xs)))))]
-    (map string/trim (split-comma-separated-terms-helper (string/split terms #",")))))
+  (if (nil? terms)
+      '()
+      (letfn [(split-comma-separated-terms-helper [[x & xs]] 
+              (cond (nil? x) '()
+              (balanced? x) (cons x (split-comma-separated-terms-helper xs))
+              :else (split-comma-separated-terms-helper (cons (str x "," (first xs)) (rest xs)))))]
+        (map string/trim (split-comma-separated-terms-helper (string/split terms #","))))))
     
 
 (defn split-compound-term
@@ -69,3 +71,9 @@
     (compound-term? term) { :type :compound, :functor (functor term), :args (map parse-term (arguments term))}
     ; TODO Handle error-case
   ))
+
+(defn parse-rule
+  "Parse the string representation of a rule."
+  [rule]
+  (let [[head body] (split-rule rule)]
+    { :head (parse-term head), :body (map parse-term (split-comma-separated-terms body))}))
