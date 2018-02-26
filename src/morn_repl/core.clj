@@ -1,9 +1,11 @@
 (ns morn-repl.core
   (:gen-class)
   (:require [clojure.string :as string]
-            [morn-repl.term-parser :as term-parser]))
+            [morn-repl.parser :as parser]))
 
 (defn -main
   "I don't do a whole lot ... yet."
-  [& args]
-  (println args))
+  []
+  (println "Welcome to morn-repl!")
+  (let [line (read)]
+    (println line)))

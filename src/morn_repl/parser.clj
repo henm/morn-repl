@@ -1,4 +1,4 @@
-(ns morn-repl.term-parser
+(ns morn-repl.parser
   (:gen-class)
   (:require [clojure.string :as string]))
 

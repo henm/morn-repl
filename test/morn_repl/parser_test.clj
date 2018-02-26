@@ -1,6 +1,6 @@
-(ns morn-repl.term-parser-test
+(ns morn-repl.parser-test
   (:require [clojure.test :refer :all]
-            [morn-repl.term-parser :refer :all]))
+            [morn-repl.parser :refer :all]))
 
 (deftest split-rule-test
   (testing "split-rule should handle tests"
