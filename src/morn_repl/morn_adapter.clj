@@ -7,10 +7,6 @@
   []
   (new de.henm.morn.KnowledgeBase))
 
-(defn add-rule
-  [kb { head :head, body :body }]
-  (let [morn-rule (new de.henm.morn.core.Rule head body)]))
-
 (defn variable?
   "Check if an atom refers a variable."
   [name]
@@ -37,3 +33,14 @@
   (cond (and (= type :atom) (variable? (term :name))) (new de.henm.morn.core.Variable (term :name))
         (and (= type :atom) (constant? (term :name))) (new de.henm.morn.core.Constant (term :name))
         :else (build-compound-term term)))
+
+(defn run-query
+  "Query a knowledge base"
+  [kb term]
+  (let [query-term (build-term term)]
+    (. kb query query-term)))
+
+(defn add-rule
+  [kb { head :head, body :body }]
+  (cond (empty? body) (. kb addFact (new de.henm.morn.core.Fact (build-term head)))
+        :else (. kb addRule (new de.henm.morn.core.Rule (build-term head) (map build-term body)))))

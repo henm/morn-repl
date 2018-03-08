@@ -13,6 +13,8 @@
 
 (defn empty-line? "Check if empty line was read" [line] (empty? line))
 
+(defn query? "Check if an entry is a query" [line] (string/starts-with? (string/trim line) "?"))
+
 (defn repl-loop
   "Read line by line"
   [kb]
@@ -21,6 +23,7 @@
   (let [line (read-line)]
     (cond (eof? line) (exit)
           (empty-line? line) ()
+          (query? line) (println (morn-adapter/run-query kb (parser/parse-query line)))
           :else (morn-adapter/add-rule kb (parser/parse-rule line))))
   (recur kb))
 

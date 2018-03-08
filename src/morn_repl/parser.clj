@@ -66,14 +66,21 @@
 (defn parse-term
   "Parse the string representation of a term."
   [term]
-  (cond
-    (atom? term) { :type :atom, :name term }
-    (compound-term? term) { :type :compound, :functor (functor term), :args (map parse-term (arguments term))}
-    ; TODO Handle error-case
-  ))
+  (let [ trimmed-term (string/trim term) ]
+    (cond
+      (atom? trimmed-term) { :type :atom, :name trimmed-term }
+      (compound-term? trimmed-term) { :type :compound, :functor (functor trimmed-term), :args (map parse-term (arguments trimmed-term))}
+      ; TODO Handle error-case
+    )))
 
 (defn parse-rule
   "Parse the string representation of a rule."
   [rule]
   (let [[head body] (split-rule rule)]
     { :head (parse-term head), :body (map parse-term (split-comma-separated-terms body))}))
+
+(defn parse-query
+  "Parse a query."
+  [query]
+  (let [query-term (string/replace-first query #"\?" "")]
+    (parse-term query-term)))
