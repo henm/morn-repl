@@ -32,4 +32,8 @@
   (testing "build-term should handle variable"
     (let [morn-term (build-term { :type :atom, :name "X" })]
       (is (instance? de.henm.morn.core.Variable morn-term))
-      (is (= (. morn-term toString) "X")))))
+      (is (= (. morn-term toString) "X"))))
+  (testing "build-term should return very same morn-term for same term"
+    (let [morn-term (build-term { :type :atom, :name "X" })
+          morn-term-2 (build-term { :type :atom, :name "X" })]
+      (is (= morn-term morn-term-2)))))
