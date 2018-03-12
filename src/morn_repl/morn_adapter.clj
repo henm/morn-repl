@@ -25,7 +25,7 @@
 
 (defn build-compound-term
   "Build a morn-compound-term"
-  [{ type :type, functor :functor, args :args :as term}]
+  [{ :keys [type functor args] :as term}]
   (cache/lookup
     (swap! term-cache cache/through-cache term
       (let [morn-functor (new de.henm.morn.core.Functor functor)
@@ -36,7 +36,7 @@
 
 (defn build-variable
   "Build a morn-variable"
-  [{ type :type, :name name :as term}]
+  [{ :keys [type name] :as term}]
   (cache/lookup
     (swap! term-cache cache/through-cache term
       (constantly (new de.henm.morn.core.Variable (term :name))))
@@ -44,7 +44,7 @@
 
 (defn build-constant
   "Build a morn-constant"
-  [{ type :type, :name name :as term}]
+  [{ :keys [type name] :as term}]
   (cache/lookup
     (swap! term-cache cache/through-cache term
       (constantly (new de.henm.morn.core.Constant (term :name))))
@@ -64,6 +64,6 @@
     (. kb query query-term)))
 
 (defn add-rule
-  [kb { head :head, body :body }]
+  [kb { :keys [head body] }]
   (cond (empty? body) (. kb addFact (new de.henm.morn.core.Fact (build-term head)))
         :else (. kb addRule (new de.henm.morn.core.Rule (build-term head) (map build-term body)))))
