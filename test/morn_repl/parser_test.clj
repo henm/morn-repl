@@ -77,3 +77,9 @@
         (is (= ((first nested-terms) :args) '({ :type :atom, :name "Z"})))
         (is (= ((second nested-terms) :type) :atom)
         (is (= ((second nested-terms) :name) "X")))))))
+
+(deftest parse-query-test
+  (testing "parse-query should ignore question-mark"
+    (let [ query-term (parse-query "? a(X)") ]
+      (is (= (query-term :type) :compound)
+      (is (= (query-term :functor) "a"))))))

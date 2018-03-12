@@ -1,7 +1,8 @@
 (ns morn-repl.core
   (:gen-class)
   (:require [clojure.string :as string]
-            [morn-repl.parser :as parser]))
+            [morn-repl.parser :as parser]
+            [morn-repl.morn-adapter :as morn-adapter]))
 
 (defn exit "Exit the repl" []
   (println)
@@ -12,19 +13,23 @@
 
 (defn empty-line? "Check if empty line was read" [line] (empty? line))
 
+(defn query? "Check if an entry is a query" [line] (string/starts-with? (string/trim line) "?"))
+
 (defn repl-loop
   "Read line by line"
-  []
+  [kb]
   (print "> ")
   (flush)
   (let [line (read-line)]
     (cond (eof? line) (exit)
           (empty-line? line) ()
-          :else (println (parser/parse-rule line))))
-  (recur))
+          (query? line) (println (morn-adapter/run-query kb (parser/parse-query line)))
+          :else (morn-adapter/add-rule kb (parser/parse-rule line))))
+  (recur kb))
 
 (defn -main
   "Start morn-repl!"
   []
   (println "Welcome to morn-repl!")
-  (repl-loop))
+  (let [kb (morn-adapter/knowledge-base)]
+    (repl-loop kb)))
