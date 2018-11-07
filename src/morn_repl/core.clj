@@ -21,10 +21,12 @@
   (print "> ")
   (flush)
   (let [line (read-line)]
-    (cond (eof? line) (exit)
-          (empty-line? line) ()
-          (query? line) (println (morn-adapter/run-query kb (parser/parse-query line)))
-          :else (morn-adapter/add-rule kb (parser/parse-rule line))))
+    (try
+      (cond (eof? line) (exit)
+            (empty-line? line) ()
+            (query? line) (println (morn-adapter/run-query kb (parser/parse-query line)))
+            :else (morn-adapter/add-rule kb (parser/parse-rule line)))
+      (catch Exception e (println (str "Error: "  (.getMessage e))))))
   (recur kb))
 
 (defn -main
