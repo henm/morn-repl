@@ -1,36 +1,26 @@
 # morn-repl
 
-FIXME: description
+An experimental REPL form [morn](https://github.com/henm/morn). Currently it's mostly a clojure playground for me.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+Make sure morn is somewhere leiningen can find it (e.g. by installing it with `mvn install`). The repl can be started with
 
-## Usage
+```
+lein run
+```
 
-FIXME: explanation
-
-    $ java -jar morn-repl-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
+To exit the REPL press Ctrl-D.
 
 ## Examples
 
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+```bash
+$ lein run
+Welcome to morn-repl!
+> cat(tom).
+> animal(X) :- cat(X).
+> ?animal(tom)
+true
+>
+Bye!
+```
