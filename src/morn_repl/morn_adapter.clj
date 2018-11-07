@@ -22,17 +22,18 @@
   (not (= name (string/upper-case name))))
 
 (declare build-term)
+(declare build-functor)
 
 (defn build-compound-term
   "Build a morn-compound-term"
   [{ :keys [type functor args] :as term}]
   (cache/lookup
     (swap! term-cache cache/through-cache term
-      (let [morn-functor (new de.henm.morn.core.model.Functor functor)
+      (let [morn-functor (build-functor functor)
             morn-arguments (map build-term args)
             compound-term-factory (new de.henm.morn.core.model.CompoundTermFactory)]
         (constantly (. compound-term-factory build morn-functor morn-arguments))))
-  term))
+    term))
 
 (defn build-variable
   "Build a morn-variable"
@@ -40,7 +41,7 @@
   (cache/lookup
     (swap! term-cache cache/through-cache term
       (constantly (new de.henm.morn.core.model.Variable (term :name))))
-  term))
+    term))
 
 (defn build-constant
   "Build a morn-constant"
@@ -48,7 +49,15 @@
   (cache/lookup
     (swap! term-cache cache/through-cache term
       (constantly (new de.henm.morn.core.model.Constant (term :name))))
-  term))
+    term))
+
+(defn build-functor
+  "Build a morn-functor"
+  [name]
+  (cache/lookup
+    (swap! term-cache cache/through-cache name
+      (constantly (new de.henm.morn.core.model.Functor name)))
+    name))
 
 (defn build-term
   "Build a morn-term"
