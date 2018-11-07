@@ -27,11 +27,11 @@
 (deftest build-term-test
   (testing "build-term should handle constants"
     (let [morn-term (build-term { :type :atom, :name "const" })]
-      (is (instance? de.henm.morn.core.Constant morn-term))
+      (is (instance? de.henm.morn.core.model.Constant morn-term))
       (is (= (. morn-term toString) "const"))))
   (testing "build-term should handle variable"
     (let [morn-term (build-term { :type :atom, :name "X" })]
-      (is (instance? de.henm.morn.core.Variable morn-term))
+      (is (instance? de.henm.morn.core.model.Variable morn-term))
       (is (= (. morn-term toString) "X"))))
   (testing "build-term should return very same morn-term for same term"
     (let [morn-term (build-term { :type :atom, :name "X" })

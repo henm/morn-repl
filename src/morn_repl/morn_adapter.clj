@@ -9,7 +9,7 @@
 (defn knowledge-base
   "Create a morn knowledge base"
   []
-  (new de.henm.morn.KnowledgeBase))
+  (new de.henm.morn.core.KnowledgeBase))
 
 (defn variable?
   "Check if an atom refers a variable."
@@ -28,9 +28,9 @@
   [{ :keys [type functor args] :as term}]
   (cache/lookup
     (swap! term-cache cache/through-cache term
-      (let [morn-functor (new de.henm.morn.core.Functor functor)
+      (let [morn-functor (new de.henm.morn.core.model.Functor functor)
             morn-arguments (map build-term args)
-            compound-term-factory (new de.henm.morn.core.CompoundTermFactory)]
+            compound-term-factory (new de.henm.morn.core.model.CompoundTermFactory)]
         (constantly (. compound-term-factory build morn-functor morn-arguments))))
   term))
 
@@ -39,7 +39,7 @@
   [{ :keys [type name] :as term}]
   (cache/lookup
     (swap! term-cache cache/through-cache term
-      (constantly (new de.henm.morn.core.Variable (term :name))))
+      (constantly (new de.henm.morn.core.model.Variable (term :name))))
   term))
 
 (defn build-constant
@@ -47,7 +47,7 @@
   [{ :keys [type name] :as term}]
   (cache/lookup
     (swap! term-cache cache/through-cache term
-      (constantly (new de.henm.morn.core.Constant (term :name))))
+      (constantly (new de.henm.morn.core.model.Constant (term :name))))
   term))
 
 (defn build-term
@@ -65,5 +65,5 @@
 
 (defn add-rule
   [kb { :keys [head body] }]
-  (cond (empty? body) (. kb addFact (new de.henm.morn.core.Fact (build-term head)))
-        :else (. kb addRule (new de.henm.morn.core.Rule (build-term head) (map build-term body)))))
+  (cond (empty? body) (. kb addFact (new de.henm.morn.core.model.Fact (build-term head)))
+        :else (. kb addRule (new de.henm.morn.core.model.Rule (build-term head) (map build-term body)))))
